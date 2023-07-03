@@ -47,9 +47,9 @@ They're used to store sensitive information, like passwords or keys.
 ![](images/2.9.png)
 
 - In order to generate the encoded passwords, we run the commands:
-`echo -n 'mysql' | base64`
-`echo -n 'root' | base64`
-`echo -n 'paswrd' | base64`
+    - `echo -n 'mysql' | base64`
+    - `echo -n 'root' | base64`
+    - `echo -n 'paswrd' | base64`
 - To view our created secrets, we run the command:
 `kubectl get secrets`
 - In order to decode, we can use the command:
@@ -60,3 +60,69 @@ They're used to store sensitive information, like passwords or keys.
 ![](images/3.0.png)
 
 - Note: This isn't that safe, as it can quite easily be decoded.
+
+# Encrypting Secret data at rest
+It refers to encrypting data while it's stored on a disk. This safeguards data should the storage system be compromised. The data at rest in the ETCD can be encrypted. 
+
+- We can first check whether encryption is already enabled with the command:
+`ps -aux | grep kube-api | grep "encryption-provider-config"`
+
+### Creating the encryption
+- We first need to create a 32-byte random key:
+`head -c 32 /dev/urandom | base64`
+- We can then add this to an encription YAML file:
+
+![](images/3.1.png)
+
+- Next, we need to move the file to the local directory:
+    - `mkdir /etc/kubernetes/enc`
+    - `mv env.yaml /etc/kubernetes/enc`
+
+- We next need to mainfest this into the kube-apiserver
+`vim /etc/kubernetes/mainfests/kube-apiserver.yaml`
+- We add the following to the file:
+`--encryption-provider-config=/etc/kubernetes/enc/enc.yaml`
+
+![](images/3.2.png)
+
+- Under volume mounts we add:
+```
+- name: enc
+  mountPath: /etc/kubernetes/enc
+  readonly: true
+```
+![](images/3.3.png)
+
+- Then under volumes we add:
+```
+- name: enc
+  hostPath:
+    path: /etc/kubernetes/enc
+    type: Directory0rCreate
+```
+![](images/3.4.png)
+
+- We can then chack that this has configured by running the command:
+`ps aux | grep kube-api | grep encry`
+
+- We should see the following
+
+![](images/3.5.png)
+
+- Now that we know that the encryption is enabled, we can test it. We can create a secret key: 
+`kubectl create generic my-secret-3 --from-literal=key2=topsecret`
+
+- We can now run the long command to check the status of the secret-key:
+```
+ETCDCTL_API=3 etcdctl \
+   --cacert=/etc/kubernetes/pki/etcd/ca.crt  \
+   --cert=/etc/kubernetes/pki/etcd/server.crt  \
+   --key=/etc/kubernetes/pki/etcd/server.key  \
+   get /registry/secrets/default/my-secret-2 | hexdump -C
+```
+- The output should look like: 
+
+![](images/3.6.png)
+
+- We now can't see the key, so it is encrypted. 
+- The guide can be found in the official documentation: https://v1-22.docs.kubernetes.io/docs/tasks/administer-cluster/encrypt-data/ 
