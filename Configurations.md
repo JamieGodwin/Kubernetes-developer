@@ -126,3 +126,62 @@ ETCDCTL_API=3 etcdctl \
 
 - We now can't see the key, so it is encrypted. 
 - The guide can be found in the official documentation: https://v1-22.docs.kubernetes.io/docs/tasks/administer-cluster/encrypt-data/ 
+
+# Change the user 
+- When running a process, we may not want it to run as the root user. We can therefore specify who we want it to run as.
+`docker run --user=1000 ubuntu sleep 3600`
+- We are running as `user 1000`, and the image `ubuntu sleep 3600`.
+
+## Security context
+- We can add the actions to the pod.yaml file. We can either run it at the container or pod level. If we run it at the pod level, it will apply to all the containers within the pod. 
+- To run it on the pod level we do:
+
+![](images/3.7.png)
+
+- To run it on the container level:
+
+![](images/3.8.png)
+
+# Service account
+A service account is a type of account that's meant to be used by services (like pods), not users. It provides identity for processes that run in a pod. 
+- we can create one using the command:
+`kubectl create serviceaccount dashboard-sa`
+- When you create the ServiceAccount, a token is also created. The token can be used for API authentication. It however is stored as a secret object. 
+- We can view the token in the following way:
+
+![](images/3.9.png)
+
+- This can then be used to authenticate a third party connection to the kubernetes API. 
+
+- In every namespace, a default service account is created. If we create a simple pod, a volume with the token will be automatically attached.
+
+![](images/4.0.png)
+
+- If we then describe the pod, we can see the volume token attached.
+
+![](images/4.1.png)
+
+- This token is mounted at the location `/var/run/secrets/kubernetes.io/serviceaccount`
+- If we go to this location and `ls` we will see the token added. 
+
+### Add a different service account
+- We can add a different service account to the pod if we want.
+
+![](images/4.2.png)
+
+- Here, `dashboard-sa` is the service account we created. 
+
+- Note: Since version 1.22, this type of secret is no longer used to mount credentials into pods , and obtaining tokens via the TokenRequest API is recommended instead of using service account token secret objects. They're more secure because they have a bounded lifetime and aren't readable by other API clients. 
+
+# Resource requirements
+We can set the amount of CPU usage and memory that we want a pod to have available. We can also set the maximum limit for pod as well. 
+
+![](images/4.3.png)
+
+- We can also set a min request a container in a pod can make, and max limit of what can be set on a container. 
+
+![](images/4.4.png)
+
+- We can also set hard limits within a namespace with quotas:
+
+![](images/4.5.pn)
