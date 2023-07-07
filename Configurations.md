@@ -218,6 +218,19 @@ Here we set node1, with a key-value pair app=blue, and a taint effect of NoSched
 - The process is limited however, as we can't specify that a Pod can be placed on different Nodes, only one. 
 
 # Node affinity
+It provides advanced capabilities to limit pod placement on specific nodes.
+
 Node affinity is a set of rules used by the scheduler to determine which nodes a pod can be allocated to, based on labels on the nodes. It's a way to ensure that pods are hosted on a particular node or a group of nodes, typically to enhance performance, availability, or other specific needs. Kubernetes offers two kinds of node affinity:
 - Required: The scheduler will not place the pod unless the condition is met.
 - Preferred: The scheduler will try to place the pod according to the rule, but it doesn't guarantee the placement.
+
+![](images/4.8.png)
+
+- This can be done for different types. 
+
+- we can also custmise the command we use: 
+
+![](images/4.9.png)
+
+# Taints and tolerations vs Node affinity
+Overall, node affinity is used to attract pods to nodes whereas taints and tolerations are used to manage which pods can be scheduled onto a node. They can be used together to effectively manage where and how pods are scheduled in a Kubernetes cluster.
