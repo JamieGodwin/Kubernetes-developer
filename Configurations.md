@@ -185,3 +185,39 @@ We can set the amount of CPU usage and memory that we want a pod to have availab
 - We can also set hard limits within a namespace with quotas:
 
 ![](images/4.5.pn)
+
+# Taints and tolerations
+- Taints and tolerations are used to set restrictions on what pods can be scheduled on a node.
+- If we want only certain Pods on a particular node, we can place a taint on the node, and by default, Pods do not have any tolerations, therefore they cannot go to that node with the taint.
+- When we set a taint on a node, all existing Pods without the right toleration will be removed. 
+- JUst because we have restricted a node from accepting certain Pods, it doesn't guarentee that the Pods with the right toleration will be placed on them. 
+- The scheduler never sets a Pod onto the master node because it comes with an automatic taint attached to it. 
+
+- We can set a taint on a Node with the following:
+`kubectl taint nodes node-name Key=value:taint-effect`
+`kubectl taint nodes node1 app=blue:NoSchedule`
+Here we set node1, with a key-value pair app=blue, and a taint effect of NoSchedule. 
+- The taint effects are:
+    - NoSchedule = Pods will not be scheduled on the node. (Unless they have the correct toleration)
+    - PreferNoSchedule = It will try not to schedule pod onto node but not guaranteed.
+    - NoExecute = New pods will not be scheduled and existing pods (if any) will be evicted.
+
+- When setting toleration, it looks like: 
+
+![](images/4.6.png)
+
+# Node selectors 
+- We can place our pods on specific nodes. 
+- We need to first assign a label to our nodes, which we can do by:
+`kubectl label nodes <node-name> <label-key>=<label-value>`
+- We can then choose where our Pod goes in the definition file:
+
+![](images/4.7.png)
+
+- Here, the node we want to assign to has a key: pair of size:Large. 
+- The process is limited however, as we can't specify that a Pod can be placed on different Nodes, only one. 
+
+# Node affinity
+Node affinity is a set of rules used by the scheduler to determine which nodes a pod can be allocated to, based on labels on the nodes. It's a way to ensure that pods are hosted on a particular node or a group of nodes, typically to enhance performance, availability, or other specific needs. Kubernetes offers two kinds of node affinity:
+- Required: The scheduler will not place the pod unless the condition is met.
+- Preferred: The scheduler will try to place the pod according to the rule, but it doesn't guarantee the placement.
