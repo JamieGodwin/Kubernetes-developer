@@ -1,6 +1,6 @@
 # Multi-container
 Inside one, you can have multiple containers in the same pod. Inside a multi-container pod, all containers share the same network namespace, including the IP address and network ports, and can communicate with each other using localhost. They can also share the storage volumes.
-- It ca n look like this:
+- It can look like this:
 
 ![](images/5.0.png)
 
