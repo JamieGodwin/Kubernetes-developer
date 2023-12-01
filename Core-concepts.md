@@ -1,6 +1,6 @@
 # Core concepts
 ## Nodes and clusters
-- A node is a virtual machine which kubernetes is installed on. This i where pods can be launched. If one goes down, everything we're doing fails. We therfore need multiple nodes.
+- A node is a virtual machine which kubernetes is installed on. This is where pods can be launched. If one goes down, everything we're doing fails. We therfore need multiple nodes.
 - A cluster is multiple nodes grouped together, so if one node fails, we still have others up and running. 
 - The master node watches over the nodes in the cluster, and is responsible for the orchestration. 
 ![](images/1.1.png)
@@ -37,9 +37,9 @@ Every pod can communicate with every other pod using an internal pod network ove
 It acts as a network proxy, providing a virtual IP address for each service and distributing traffic to the appropriate backend pods.
 
 ## Docker vs ContainerD
-### Docker
+### Docker -
 Docker is a platform that provides a comprehensive set of tools and services for building, packaging and distributing containers. It includes Docker engine, which utilises ContainerD as its underlying runtime.
-### ContainerD
+### ContainerD -
 It's an open source container runtime focused on core container functionality. It's designed to be lightweight, modular and easily embeddable into different container platforms and orchestration systems.
 
 ## Pods with YAML
@@ -63,7 +63,7 @@ It's an open source container runtime focused on core container functionality. I
 
 ## Replication controller
 A replication controller can control pods over multiple nodes.
-- In order to do this, do the following yaml file:
+- In order to do this, do the following YAML file:
 ![](images/1.5.png)
 
 - Here, we're creating a replication controller. This allows us to create replicas of pods.
@@ -72,7 +72,7 @@ A replication controller can control pods over multiple nodes.
 
 ## Replica sets
 Replicas allow for high availability where you state a number of pods to run, and then the replication controller can bring up new pods to meet the replica set if any go down.
-- To create one, create a yaml file with the following:
+- To create one, create a YAML file with the following:
 
 ![](images/1.6.png)
 
@@ -87,6 +87,7 @@ Replicas allow for high availability where you state a number of pods to run, an
 ## Deployment
 We can deploy the application in multiple instances in different environments such as production, development etc. You can update changes or rollback in certain instances.Deployments are one level higher and can use replica sets and also control updates and changes.
 - The file we use to run this is essentially the same as the ReplicaSet, however with the name changed.
+- It's like a ReplicaSet, but with better features. 
 
 ![](images/1.7.png)
 
@@ -100,6 +101,7 @@ We can deploy the application in multiple instances in different environments su
 Namespaces help to isolate resources such as having a 'Dev' namespace, for example, so you do not accidentally modify resources in Production.In each Namespace, resources communicate with each other using their names such as 'db-service'. For a resource outside of the namespace to connect, it needs to append the name of the namespace e.g. 'db-service.dev.svc.cluster.local'. Different permissions can also be set in different namespaces.
 - When we create a pod normally, it's created in the dafault namespace.
 - However, we can create it in a different namespace, for example: `kubectl create -f pod-definition.yaml --namespace=dev`
+- If we imagine the cluster as a room, the namespace is different, seperate sections of the room. 
 - We could also instead move the namespace into the file.
 ![](images/2.0.png)
 
