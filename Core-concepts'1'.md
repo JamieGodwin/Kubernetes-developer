@@ -129,4 +129,4 @@ We can create a simple YAML file to do so.
 - We use it to apply configuration changes to our cluster.
 - If I make a change to the file "nginx.yaml" I can apply this with the command:
 
-'kubectl apply -f nginx.yaml'
+`kubectl apply -f nginx.yaml`
