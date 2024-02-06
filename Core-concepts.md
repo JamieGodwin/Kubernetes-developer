@@ -3,6 +3,9 @@
 - A node is a virtual machine which kubernetes is installed on. This is where pods can be launched. If one goes down, everything we're doing fails. We therfore need multiple nodes.
 - A cluster is multiple nodes grouped together, so if one node fails, we still have others up and running. 
 - The master node watches over the nodes in the cluster, and is responsible for the orchestration. 
+
+### Below is an image of the cluster 
+
 ![](images/1.1.png)
 
 ## ETCD
@@ -130,3 +133,5 @@ We can create a simple YAML file to do so.
 - If I make a change to the file "nginx.yaml" I can apply this with the command:
 
 `kubectl apply -f nginx.yaml`
+
+## Pods with Yaml
