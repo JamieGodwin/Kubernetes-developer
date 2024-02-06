@@ -1,5 +1,5 @@
 # Configurations
-- We can configure the image to slepp on startup by changing its configuration: 
+- We can configure the image to sleep on startup by changing its configuration: 
 
 ![](images/2.3.png)
 
